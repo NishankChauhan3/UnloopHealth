@@ -19,11 +19,11 @@ class Database:
             ca = certifi.where()
             self.client = MongoClient(self.uri, tlsCAFile=ca)
             
-            # Explicitly check for the default database if specified in the URI
-            default_db = self.client.get_default_database()
-            if default_db is not None:
+            try:
+                # Explicitly check for the default database if specified in the URI
+                default_db = self.client.get_default_database()
                 self.db = default_db
-            else:
+            except Exception:
                 self.db = self.client['nutricore']
                 
             # Ping the database to check connectivity

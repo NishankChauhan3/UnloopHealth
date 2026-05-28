@@ -1,0 +1,61 @@
+/* Dashboard Specific Styling */
+
+.header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 3rem;
+}
+
+.risk-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.risk-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.risk-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+}
+
+.risk-card.low::before { background: var(--risk-low); }
+.risk-card.moderate::before { background: var(--risk-moderate); }
+.risk-card.high::before { background: var(--risk-high); }
+.risk-card.critical::before { background: var(--risk-critical); }
+
+.countdown-timer {
+  font-family: 'Outfit', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 1rem 0;
+}
+
+.health-score-ring {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: conic-gradient(var(--risk-low) 85%, transparent 0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.health-score-ring::after {
+  content: '';
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  background: var(--bg-dark);
+  border-radius: 50%;
+  display: block;
+}

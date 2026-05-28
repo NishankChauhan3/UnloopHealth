@@ -1,8 +1,12 @@
 import os
+import sys
 from flask import Flask, jsonify
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from dotenv import load_dotenv
+
+# Add the directory containing app.py to the Python path
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 # Load environment variables
 load_dotenv()
@@ -47,7 +51,9 @@ def create_app(test_config=None):
 
     return app
 
+# Instantiate the Flask app at the module level for Vercel WSGI
+app = create_app()
+
 if __name__ == '__main__':
-    app = create_app()
     port = int(os.getenv('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=True)

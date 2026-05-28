@@ -169,29 +169,48 @@
         try {
             const foods = await api.searchFoods(q, diet);
             resultsDiv.innerHTML = foods.map(f => `
-                <div class="food-item" style="cursor:pointer;" onclick="logFood('${f.name}', ${f.calories}, ${f.protein}, ${f.carbohydrates || f.carbs}, ${f.fats || f.fat})">
+                <div class="food-item log-food-btn" style="cursor:pointer;" 
+                     data-name="${f.name}" 
+                     data-cal="${f.calories}" 
+                     data-pro="${f.protein}" 
+                     data-carb="${f.carbohydrates || f.carbs || 0}" 
+                     data-fat="${f.fats || f.fat || 0}">
                     <div>
                         <strong>${f.name}</strong>
                         <div style="font-size: 0.7rem; color: rgba(255,255,255,0.5);">${f.dietType || 'Unknown'} | ${f.per_unit || '100g'}</div>
                     </div>
                     <div style="text-align:right;">
                         <div style="font-weight:700;">${f.calories} kcal</div>
-                        <div style="font-size: 0.7rem;">P: ${f.protein}g | C: ${f.carbohydrates || f.carbs}g</div>
+                        <div style="font-size: 0.7rem;">P: ${f.protein}g | C: ${f.carbohydrates || f.carbs || 0}g</div>
                     </div>
                 </div>
             `).join('');
         } catch (err) { console.error(err); }
     });
 
-    window.logFood = async (name, calories, protein, carbs, fats) => {
+    // Use event delegation for robust clicking
+    resultsDiv.addEventListener('click', async (e) => {
+        const item = e.target.closest('.log-food-btn');
+        if (!item) return;
+
+        const name = item.getAttribute('data-name');
+        const calories = parseFloat(item.getAttribute('data-cal'));
+        const protein = parseFloat(item.getAttribute('data-pro'));
+        const carbs = parseFloat(item.getAttribute('data-carb'));
+        const fats = parseFloat(item.getAttribute('data-fat'));
+        
         const meal_type = document.getElementById('mealTypeSelect').value;
+        
         try {
             await api.logMeal({ name, calories, protein, carbs, fats, meal_type });
             searchInput.value = '';
             resultsDiv.innerHTML = '';
             loadDailyTracker();
-        } catch (err) { alert("Failed to log food"); }
-    };
+        } catch (err) { 
+            console.error("Meal log error:", err);
+            alert("Failed to log food"); 
+        }
+    });
     
     window.deleteMeal = async (id) => {
         try {
