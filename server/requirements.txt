@@ -2,9 +2,6 @@ flask
 flask-jwt-extended
 flask-cors
 pymongo
-bcrypt
 marshmallow
 python-dotenv
-pytest
-mongomock
 certifi
