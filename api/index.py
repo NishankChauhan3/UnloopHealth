@@ -1,7 +1,13 @@
-from flask import Flask, jsonify
+import sys
+import os
 
-app = Flask(__name__)
+# Add the server and root directories to the Python search path
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+server_dir = os.path.join(parent_dir, 'server')
 
-@app.route('/api/health')
-def health():
-    return jsonify({"status": "healthy", "source": "index.py"})
+for d in [parent_dir, server_dir]:
+    if d not in sys.path:
+        sys.path.append(d)
+
+from server.app import app

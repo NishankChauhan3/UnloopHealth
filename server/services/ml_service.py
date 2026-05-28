@@ -29,7 +29,15 @@ class MLService:
             "stress_level": 3.0
         }
         
-        os.makedirs(self.model_dir, exist_ok=True)
+        try:
+            os.makedirs(self.model_dir, exist_ok=True)
+        except OSError:
+            # Fallback to /tmp on read-only filesystems like Vercel
+            self.model_dir = os.path.join("/tmp", "saved_models")
+            try:
+                os.makedirs(self.model_dir, exist_ok=True)
+            except OSError:
+                pass
         self.all_features = ["age", "bmi", "activity_days_week", "avg_steps_day", "sedentary_hours", "daily_calories", "protein_g", "carbs_g", "fat_g", "fiber_g", "sugar_g", "sodium_mg", "water_liters", "fasting_glucose", "postmeal_glucose", "glucose_variability", "systolic_bp", "diastolic_bp", "resting_hr", "sleep_hours", "stress_score", "total_cholesterol", "hdl", "ldl", "triglycerides", "hba1c", "gender_num"]
 
     def predict_risk(self, user_data):
